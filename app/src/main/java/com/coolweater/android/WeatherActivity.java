@@ -49,10 +49,15 @@ public class WeatherActivity extends AppCompatActivity {
     private TextView carWashText;
     private TextView sportText;
     private ImageView bingPicImg;
+    private ImageView weatherPicImg;
     public SwipeRefreshLayout swipeRefresh;
 
     public DrawerLayout drawerLayout;
     private Button navButton;
+
+    public String duoyun = "多云";
+    public String yin = "阴";
+    public String qing = "晴";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +81,8 @@ public class WeatherActivity extends AppCompatActivity {
         comfortText = (TextView) findViewById(R.id.comfort_text);
         carWashText = (TextView) findViewById(R.id.car_wash_text);
         sportText = (TextView) findViewById(R.id.sport_text);
-        bingPicImg = (ImageView) findViewById(R.id.bing_pic_img);
+        //bingPicImg = (ImageView) findViewById(R.id.bing_pic_img);
+        weatherPicImg = (ImageView) findViewById(R.id.bing_pic_img);
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navButton = (Button) findViewById(R.id.nav_button);
@@ -91,7 +97,6 @@ public class WeatherActivity extends AppCompatActivity {
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String weatherString = prefs.getString("weather", null);
-        Log.d(TAG, "####tyj onCreate weatherString: " + weatherString);
         final String weatherId;
         if (weatherString != null) {
             //有缓存时直接解析天气数据
@@ -111,13 +116,13 @@ public class WeatherActivity extends AppCompatActivity {
             }
         });
 
-        String bingPic = prefs.getString("bing_pic", null);
+        /*String bingPic = prefs.getString("bing_pic", null);
         Log.d(TAG, "#####tyj onCreate bingPic: " + bingPic);
         if (bingPic != null) {
             Glide.with(this).load(bingPic).into(bingPicImg);
         } else {
             loadBingPic();
-        }
+        }*/
     }
 
     /**
@@ -152,10 +157,8 @@ public class WeatherActivity extends AppCompatActivity {
                                     getDefaultSharedPreferences(WeatherActivity.this).edit();
                             editor.putString("weather", responseText);
                             editor.apply();
-                            Log.d(TAG, " #############tyj requestWeather() weather: " + weather);
                             showWeatherInfo(weather);
                         } else {
-                            Log.d(TAG, "####################tyj get weather failed");
                             Toast.makeText(WeatherActivity.this, "获取天气信息失败", Toast.LENGTH_SHORT)
                                     .show();
                         }
@@ -164,8 +167,8 @@ public class WeatherActivity extends AppCompatActivity {
                 });
             }
         });
-        Log.d(TAG, "##########tyj requestWeather loadBingPic() ");
-        loadBingPic();
+        //Log.d(TAG, "##########tyj requestWeather loadBingPic() ");
+        //loadBingPic();
     }
 
     /**
@@ -178,8 +181,15 @@ public class WeatherActivity extends AppCompatActivity {
 
         String updateTime = weather.basic.update.updateTime.split(" ")[1];
         String degree = weather.now.temperature + ".C";
-        Log.d(TAG, "#######tyj degree: " + degree);
         String weatherInfo = weather.now.more.info;
+        if (weatherInfo.equals(duoyun)) {
+            weatherPicImg.setImageDrawable(getResources().getDrawable(R.drawable.duoyun));
+        } else if (weatherInfo.equals(yin)) {
+            weatherPicImg.setImageDrawable(getDrawable(R.drawable.yin));
+        } else if (weatherInfo.equals(qing)) {
+            weatherPicImg.setImageDrawable(getDrawable(R.drawable.qing));
+        }
+
         titleCity.setText(cityName);
         titleUpdateTime.setText(updateTime);
         degreeText.setText(degree);

@@ -94,9 +94,9 @@ public class Utility {
         try {
             JSONObject jsonObject = new JSONObject(response);
             JSONArray jsonArray = jsonObject.getJSONArray("HeWeather");
-            Log.d("Utility", "#####tyj handleWeatherResponse: jsonArray: " + jsonArray);
+            //Log.d("Utility", "#####tyj handleWeatherResponse: jsonArray: " + jsonArray);
             String weatherContent = jsonArray.getJSONObject(0).toString();
-            Log.d("Utility", "####tyj handleWeatherResponse: weatherContent: " + weatherContent);
+            //Log.d("Utility", "####tyj handleWeatherResponse: weatherContent: " + weatherContent);
             return new Gson().fromJson(weatherContent, Weather.class);
         } catch (Exception e) {
             e.printStackTrace();
