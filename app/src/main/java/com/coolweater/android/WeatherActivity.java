@@ -27,8 +27,11 @@ import com.coolweater.android.gson.Weather;
 import com.coolweater.android.service.AutoUpdateService;
 import com.coolweater.android.util.HttpUtil;
 import com.coolweater.android.util.Utility;
+import com.felipecsl.gifimageview.library.GifImageView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -51,6 +54,8 @@ public class WeatherActivity extends AppCompatActivity {
     private ImageView bingPicImg;
     private ImageView weatherPicImg;
     public SwipeRefreshLayout swipeRefresh;
+
+    private GifImageView dynamicImg;
 
     public DrawerLayout drawerLayout;
     private Button navButton;
@@ -83,6 +88,7 @@ public class WeatherActivity extends AppCompatActivity {
         sportText = (TextView) findViewById(R.id.sport_text);
         //bingPicImg = (ImageView) findViewById(R.id.bing_pic_img);
         weatherPicImg = (ImageView) findViewById(R.id.bing_pic_img);
+        dynamicImg = (GifImageView) findViewById(R.id.dynamic_img);
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navButton = (Button) findViewById(R.id.nav_button);
@@ -189,6 +195,24 @@ public class WeatherActivity extends AppCompatActivity {
         } else if (weatherInfo.equals(qing)) {
             weatherPicImg.setImageDrawable(getDrawable(R.drawable.qing));
         }
+
+
+        try {
+            InputStream is = this.getResources().openRawResource(R.drawable.duoyun_dynamic);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            byte[] b = new byte[2048];
+            int len = 0;
+            while ((len = is.read(b, 0, 2048)) != -1) {
+                baos.write(b, 0, len);
+            }
+            baos.flush();
+            byte[] bytes = baos.toByteArray();
+            dynamicImg.setBytes(bytes);
+            dynamicImg.startAnimation();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         titleCity.setText(cityName);
         titleUpdateTime.setText(updateTime);
