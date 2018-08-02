@@ -51,12 +51,14 @@ public class WeatherActivity extends AppCompatActivity {
     private TextView comfortText;
     private TextView carWashText;
     private TextView sportText;
+    //每日必应一图
     private ImageView bingPicImg;
+    //根据不同天气变化的静态背景图
     private ImageView weatherPicImg;
-    public SwipeRefreshLayout swipeRefresh;
-
+    //动态背景图
     private GifImageView dynamicImg;
 
+    public SwipeRefreshLayout swipeRefresh;
     public DrawerLayout drawerLayout;
     private Button navButton;
 
@@ -122,6 +124,7 @@ public class WeatherActivity extends AppCompatActivity {
             }
         });
 
+        //去掉加载必应每日一图
         /*String bingPic = prefs.getString("bing_pic", null);
         Log.d(TAG, "#####tyj onCreate bingPic: " + bingPic);
         if (bingPic != null) {
@@ -173,7 +176,7 @@ public class WeatherActivity extends AppCompatActivity {
                 });
             }
         });
-        //Log.d(TAG, "##########tyj requestWeather loadBingPic() ");
+        //去掉加载必应每日一图
         //loadBingPic();
     }
 
@@ -181,13 +184,12 @@ public class WeatherActivity extends AppCompatActivity {
      * 处理并展示Weather实体类中的数据
      */
     private void showWeatherInfo(Weather weather) {
-
         String cityName = weather.basic.cityName;
-        Log.d(TAG, "#################tyj showWeatherInfo  weather.basic.cityName: " + weather.basic.cityName);
-
         String updateTime = weather.basic.update.updateTime.split(" ")[1];
         String degree = weather.now.temperature + ".C";
         String weatherInfo = weather.now.more.info;
+
+        //根据不同天气情况，改变静态背景图片
         if (weatherInfo.equals(duoyun)) {
             weatherPicImg.setImageDrawable(getResources().getDrawable(R.drawable.duoyun));
         } else if (weatherInfo.equals(yin)) {
@@ -196,7 +198,7 @@ public class WeatherActivity extends AppCompatActivity {
             weatherPicImg.setImageDrawable(getDrawable(R.drawable.qing));
         }
 
-
+        //增加一个多云动态背景用于测试
         try {
             InputStream is = this.getResources().openRawResource(R.drawable.duoyun_dynamic);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -212,7 +214,6 @@ public class WeatherActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
         titleCity.setText(cityName);
         titleUpdateTime.setText(updateTime);
@@ -244,6 +245,7 @@ public class WeatherActivity extends AppCompatActivity {
         sportText.setText(sport);
         weatherLayout.setVisibility(View.VISIBLE);
 
+        //开启后台自动更新服务
         Intent intent = new Intent(this, AutoUpdateService.class);
         startService(intent);
     }
